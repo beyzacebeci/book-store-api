@@ -4,7 +4,10 @@
     {
         public String Name { get; set; }
 
-        public int AuthorId { get; set; }
+        public IFormFile Files { get; set; }
+
+
+
 
     }
 }

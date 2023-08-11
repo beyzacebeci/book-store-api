@@ -1,5 +1,5 @@
-﻿using System.Text.Json.Serialization;
-using WebApp.Models;
+﻿using Entities.Models;
+
 
 namespace WebApp.Data
 {
@@ -8,6 +8,7 @@ namespace WebApp.Data
         public int Id { get; set; }
         public String Name { get; set; }
         public ICollection<Book> Books { get; set; }
+
      
     }
 }

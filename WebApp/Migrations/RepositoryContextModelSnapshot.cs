@@ -21,6 +21,21 @@ namespace WebApp.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
+            modelBuilder.Entity("AuthorCategory", b =>
+                {
+                    b.Property<int>("AuthorsAuthorId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CategoriesCategoryId")
+                        .HasColumnType("int");
+
+                    b.HasKey("AuthorsAuthorId", "CategoriesCategoryId");
+
+                    b.HasIndex("CategoriesCategoryId");
+
+                    b.ToTable("AuthorCategory");
+                });
+
             modelBuilder.Entity("WebApp.Models.Author", b =>
                 {
                     b.Property<int>("AuthorId")
@@ -32,26 +47,12 @@ namespace WebApp.Migrations
                     b.Property<string>("AuthorName")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("FileName")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("AuthorId");
 
-                    b.ToTable("Authors", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            AuthorId = 1,
-                            AuthorName = "Cengiz Aytmatov"
-                        },
-                        new
-                        {
-                            AuthorId = 2,
-                            AuthorName = "Tolstoy"
-                        },
-                        new
-                        {
-                            AuthorId = 3,
-                            AuthorName = "Dostoyevski"
-                        });
+                    b.ToTable("Authors");
                 });
 
             modelBuilder.Entity("WebApp.Models.Book", b =>
@@ -71,6 +72,9 @@ namespace WebApp.Migrations
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
+                    b.Property<string>("FileName")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
@@ -80,33 +84,7 @@ namespace WebApp.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Books", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            BookId = 1,
-                            AuthorId = 1,
-                            BookName = "Beyaz Gemi",
-                            CategoryId = 2,
-                            Price = 25m
-                        },
-                        new
-                        {
-                            BookId = 2,
-                            AuthorId = 2,
-                            BookName = "İnsan Ne İle Yaşar?",
-                            CategoryId = 3,
-                            Price = 16m
-                        },
-                        new
-                        {
-                            BookId = 3,
-                            AuthorId = 3,
-                            BookName = "Suç ve Ceza",
-                            CategoryId = 1,
-                            Price = 50m
-                        });
+                    b.ToTable("Books");
                 });
 
             modelBuilder.Entity("WebApp.Models.Category", b =>
@@ -122,36 +100,34 @@ namespace WebApp.Migrations
 
                     b.HasKey("CategoryId");
 
-                    b.ToTable("Categories", (string)null);
+                    b.ToTable("Categories");
+                });
 
-                    b.HasData(
-                        new
-                        {
-                            CategoryId = 1,
-                            CategoryName = "Psikolojik Roman"
-                        },
-                        new
-                        {
-                            CategoryId = 2,
-                            CategoryName = "Dram"
-                        },
-                        new
-                        {
-                            CategoryId = 3,
-                            CategoryName = "Kısa Hikaye"
-                        });
+            modelBuilder.Entity("AuthorCategory", b =>
+                {
+                    b.HasOne("WebApp.Models.Author", null)
+                        .WithMany()
+                        .HasForeignKey("AuthorsAuthorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("WebApp.Models.Category", null)
+                        .WithMany()
+                        .HasForeignKey("CategoriesCategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("WebApp.Models.Book", b =>
                 {
                     b.HasOne("WebApp.Models.Author", "Author")
-                        .WithMany()
+                        .WithMany("Books")
                         .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("WebApp.Models.Category", "Category")
-                        .WithMany()
+                        .WithMany("Books")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -159,6 +135,16 @@ namespace WebApp.Migrations
                     b.Navigation("Author");
 
                     b.Navigation("Category");
+                });
+
+            modelBuilder.Entity("WebApp.Models.Author", b =>
+                {
+                    b.Navigation("Books");
+                });
+
+            modelBuilder.Entity("WebApp.Models.Category", b =>
+                {
+                    b.Navigation("Books");
                 });
 #pragma warning restore 612, 618
         }

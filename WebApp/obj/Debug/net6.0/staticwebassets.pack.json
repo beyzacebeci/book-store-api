@@ -1,0 +1,77 @@
+{
+  "Files": [
+    {
+      "Id": "C:\\MyWorkSpace\\C#\\WebApp\\WebApp\\wwwroot\\uploads\\authors\\Kafka.png",
+      "PackagePath": "staticwebassets\\uploads\\authors\\Kafka.png"
+    },
+    {
+      "Id": "C:\\MyWorkSpace\\C#\\WebApp\\WebApp\\wwwroot\\uploads\\authors\\Tarik-Bugra.png",
+      "PackagePath": "staticwebassets\\uploads\\authors\\Tarik-Bugra.png"
+    },
+    {
+      "Id": "C:\\MyWorkSpace\\C#\\WebApp\\WebApp\\wwwroot\\uploads\\authors\\cengiz-aytmatov.png",
+      "PackagePath": "staticwebassets\\uploads\\authors\\cengiz-aytmatov.png"
+    },
+    {
+      "Id": "C:\\MyWorkSpace\\C#\\WebApp\\WebApp\\wwwroot\\uploads\\authors\\dostoyevski.png",
+      "PackagePath": "staticwebassets\\uploads\\authors\\dostoyevski.png"
+    },
+    {
+      "Id": "C:\\MyWorkSpace\\C#\\WebApp\\WebApp\\wwwroot\\uploads\\authors\\halide-edip-adivar.png",
+      "PackagePath": "staticwebassets\\uploads\\authors\\halide-edip-adivar.png"
+    },
+    {
+      "Id": "C:\\MyWorkSpace\\C#\\WebApp\\WebApp\\wwwroot\\uploads\\authors\\jane-austen.png",
+      "PackagePath": "staticwebassets\\uploads\\authors\\jane-austen.png"
+    },
+    {
+      "Id": "C:\\MyWorkSpace\\C#\\WebApp\\WebApp\\wwwroot\\uploads\\authors\\jules-verne.png",
+      "PackagePath": "staticwebassets\\uploads\\authors\\jules-verne.png"
+    },
+    {
+      "Id": "C:\\MyWorkSpace\\C#\\WebApp\\WebApp\\wwwroot\\uploads\\authors\\necip-fazil.png",
+      "PackagePath": "staticwebassets\\uploads\\authors\\necip-fazil.png"
+    },
+    {
+      "Id": "C:\\MyWorkSpace\\C#\\WebApp\\WebApp\\wwwroot\\uploads\\authors\\resat-nuri-guntekin.png",
+      "PackagePath": "staticwebassets\\uploads\\authors\\resat-nuri-guntekin.png"
+    },
+    {
+      "Id": "C:\\MyWorkSpace\\C#\\WebApp\\WebApp\\wwwroot\\uploads\\authors\\tolstoy.png",
+      "PackagePath": "staticwebassets\\uploads\\authors\\tolstoy.png"
+    },
+    {
+      "Id": "C:\\MyWorkSpace\\C#\\WebApp\\WebApp\\wwwroot\\uploads\\authors\\yasar-kemal.png",
+      "PackagePath": "staticwebassets\\uploads\\authors\\yasar-kemal.png"
+    },
+    {
+      "Id": "C:\\MyWorkSpace\\C#\\WebApp\\WebApp\\wwwroot\\uploads\\books\\bir-adam-yaratmak.png",
+      "PackagePath": "staticwebassets\\uploads\\books\\bir-adam-yaratmak.png"
+    },
+    {
+      "Id": "C:\\MyWorkSpace\\C#\\WebApp\\WebApp\\wwwroot\\uploads\\books\\insan-ne-ile-yasar.png",
+      "PackagePath": "staticwebassets\\uploads\\books\\insan-ne-ile-yasar.png"
+    },
+    {
+      "Id": "C:\\MyWorkSpace\\C#\\WebApp\\WebApp\\wwwroot\\uploads\\books\\savas-ve-baris.png",
+      "PackagePath": "staticwebassets\\uploads\\books\\savas-ve-baris.png"
+    },
+    {
+      "Id": "obj\\Debug\\net6.0\\staticwebassets\\msbuild.WebApp.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Debug\\net6.0\\staticwebassets\\msbuild.build.WebApp.props",
+      "PackagePath": "build\\WebApp.props"
+    },
+    {
+      "Id": "obj\\Debug\\net6.0\\staticwebassets\\msbuild.buildMultiTargeting.WebApp.props",
+      "PackagePath": "buildMultiTargeting\\WebApp.props"
+    },
+    {
+      "Id": "obj\\Debug\\net6.0\\staticwebassets\\msbuild.buildTransitive.WebApp.props",
+      "PackagePath": "buildTransitive\\WebApp.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

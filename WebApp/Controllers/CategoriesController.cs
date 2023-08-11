@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Entities.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.SqlServer.Query.Internal;
 using WebApp.Data;
-using WebApp.Models;
 using WebApp.Repositories;
 
 namespace WebApp.Controllers
@@ -33,15 +33,12 @@ namespace WebApp.Controllers
                 {
                     categoriesDto.Add(new CategoryDto()
                     {
-                        Id = categoryDomain.CategoryId,
+                        Id=categoryDomain.CategoryId,
                         Name = categoryDomain.CategoryName,
                         Books = categoryDomain.Books.ToList(),
 
-
                     });
                 }
-
-
                 return Ok(categoriesDto);
             }
             catch (Exception ex)
@@ -102,8 +99,13 @@ namespace WebApp.Controllers
                 if (bookDomains.Count == 0)
                     return NotFound();
 
+                
+     
+              
+                
                 var bookDtos = bookDomains.Select(bookDomain => new BookDto()
                 {
+                    
                     Id = bookDomain.BookId,
                     Title = bookDomain.BookName,
                     Price = bookDomain.Price,
@@ -119,14 +121,6 @@ namespace WebApp.Controllers
                 throw new Exception(ex.Message);
             }
         }
-
-
-
-
-
-
-
-
 
 
         [HttpPost]

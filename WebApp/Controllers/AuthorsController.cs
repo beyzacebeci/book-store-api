@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Entities.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Cryptography.X509Certificates;
 using WebApp.Data;
-using WebApp.Models;
 using WebApp.Repositories;
 
 namespace WebApp.Controllers
@@ -12,31 +13,40 @@ namespace WebApp.Controllers
     public class AuthorsController : ControllerBase
     {
         private readonly RepositoryContext _context;
-        public AuthorsController(RepositoryContext context)
+        private readonly IWebHostEnvironment _webHostEnvironment;
+        public AuthorsController(RepositoryContext context, IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         [HttpGet]
         public IActionResult GetAllAuthors()
         {
-           try
+            try
             {
                 var authorsDomain = _context.Authors
                     .Include(b => b.Books)
                     //.Include(b=>b.Categories)
                     .ToList();
-               
+
                 var authorsDto = new List<AuthorDto>();
 
                 foreach (var authorDomain in authorsDomain)
                 {
+                    string base64Image = null;
+                    if (System.IO.File.Exists(authorDomain.FileName))
+                    {
+                        byte[] b = System.IO.File.ReadAllBytes(authorDomain.FileName);
+                        base64Image= Convert.ToBase64String(b);                  
+                    }
                     authorsDto.Add(new AuthorDto()
                     {
                         Id = authorDomain.AuthorId,
                         Name = authorDomain.AuthorName,
                         //Books = authorDomain.Books.ToList()
-                        BookNames = authorDomain.Books.Select(book => book.BookName).ToList()
+                        BookNames = authorDomain.Books.Select(book => book.BookName).ToList(),
+                        Image = base64Image
                     });
                 }
                 return Ok(authorsDto);
@@ -48,7 +58,7 @@ namespace WebApp.Controllers
             }
 
         }
-      
+
         [HttpGet("{id:int}")]
         public IActionResult GetOneAuthor([FromRoute(Name = "id")] int id)
         {
@@ -88,23 +98,42 @@ namespace WebApp.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateOneAuthor([FromBody] CreateAuthorDto author)
+        public IActionResult CreateOneAuthor([FromForm] CreateAuthorDto input)
         {
             try
             {
-                if (author is null)
+                if (input is null)
                     return BadRequest();
+
+                string path = null;
+
+                if (input.Files.Length > 0)
+                {
+                    path = _webHostEnvironment.WebRootPath + "\\uploads\\authors\\";
+
+                    if (!Directory.Exists(path))
+                    {
+                        Directory.CreateDirectory(path);
+                    }
+
+                    using (FileStream fileStream = System.IO.File.Create(path + input.Files.FileName))
+                    {
+
+                        input.Files.CopyTo(fileStream);
+                        fileStream.Flush();
+
+                    }
+                }
+
 
                 _context.Authors.Add(new Author
                 {
-                    AuthorId = author.AuthorId,
-                    AuthorName=author.Name
+                    AuthorName = input.Name,
+                    FileName = path + "\\" + input.Files.FileName
+                });
 
-                }) ;
-
-           
                 _context.SaveChanges();
-                return StatusCode(201, author);
+                return Ok(input);
             }
             catch (Exception ex)
             {
@@ -142,34 +171,58 @@ namespace WebApp.Controllers
             }
         }
 
-        [HttpPut("{id:int}")]
-        public IActionResult UpdateOneAuthor([FromRoute(Name = "id")] int id, [FromBody] Author author)
-        {
-            try
-            {
-                var entity = _context
-                    .Authors
-                    .Where(b => b.AuthorId.Equals(id))
-                    .SingleOrDefault();
-                if (entity is null)
-                    return NotFound();
+        //[HttpPut("{id:int}")]
+        //public IActionResult UpdateOneAuthor([FromRoute(Name = "id")] string id, [FromForm] CreateAuthorDto input)
+        //{
+        //    try
+        //    {
+        //        var entity = _context
+        //            .Authors
+        //            .Where(b => b.AuthorId.Equals(id))
+        //            .SingleOrDefault();
+        //        if (entity is null)
+        //            return NotFound();
 
-                if (id != author.AuthorId)
-                    return BadRequest();
+        //        string path = null;
 
-                entity.AuthorName = author.AuthorName;
-                _context.SaveChanges();
+        //        if (input.Files.Length > 0)
+        //        {
+        //            path = _webHostEnvironment.WebRootPath + "\\uploads\\authors\\";
 
-                return Ok(author);
-            }
-            catch (Exception ex)
-            {
+        //            if (!Directory.Exists(path))
+        //            {
+        //                Directory.CreateDirectory(path);
+        //            }
 
-                throw new Exception(ex.Message);
-            }
+        //            using (FileStream fileStream = System.IO.File.Create(path + input.Files.FileName))
+        //            {
+
+        //                input.Files.CopyTo(fileStream);
+        //                fileStream.Flush();
+
+        //            }
+        //        }
 
 
-        }
+        //        //if (id != input.Name)
+        //        //    return BadRequest();
+
+        //        entity.AuthorName= input.Name;
+        //        entity.FileName = path + "\\" + input.Files.FileName;
+        //        _context.SaveChanges();
+
+        //        return Ok(input);
+        //    }
+        //    catch (Exception ex)
+        //    {
+
+        //        throw new Exception(ex.Message);
+        //    }
+
+
+        //}
+
+
 
 
     }

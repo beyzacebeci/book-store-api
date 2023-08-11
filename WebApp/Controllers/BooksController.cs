@@ -1,8 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Entities.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApp.Data;
-using WebApp.Models;
 using WebApp.Repositories;
 
 namespace WebApp.Controllers
@@ -12,9 +11,11 @@ namespace WebApp.Controllers
     public class BooksController : ControllerBase
     {
         private readonly RepositoryContext _context;
-        public BooksController(RepositoryContext context)
+        private readonly IWebHostEnvironment _webHostEnvironment;
+        public BooksController(RepositoryContext context , IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         [HttpGet]
@@ -23,17 +24,29 @@ namespace WebApp.Controllers
 
             try
             {
-                var booksDomain = _context.Books.Include(b => b.Author).Include(b => b.Category).ToList();
+                var booksDomain = _context.Books
+                    .Include(b => b.Author)
+                    .Include(b => b.Category)
+                    .ToList();
 
                 var booksDto = new List<BookDto>();
 
                 foreach (var bookDomain in booksDomain)
                 {
+
+                    string base64Image = null;
+                    if (System.IO.File.Exists(bookDomain.FileName))
+                    {
+                        byte[] b = System.IO.File.ReadAllBytes(bookDomain.FileName);
+                        base64Image = Convert.ToBase64String(b);
+                    }
+
                     booksDto.Add(new BookDto()
                     {
                         Id = bookDomain.BookId,
                         Title = bookDomain.BookName,
-                        Price = bookDomain.Price,                                    
+                        Price = bookDomain.Price,     
+                        Image=base64Image,
                         AuthorName = bookDomain.Author.AuthorName,
                         CategoryName = bookDomain.Category.CategoryName,
                         CategoryId = bookDomain.Category.CategoryId,
@@ -95,22 +108,44 @@ namespace WebApp.Controllers
 
 
         [HttpPost]
-        public IActionResult CreateOneBook([FromBody] CreateBookDto book)
+        public IActionResult CreateOneBook([FromForm] CreateBookDto input)
         {
             try
             {
-                if (book is null)
+                if (input is null)
                     return BadRequest();
 
+                string path = null;
+
+
+                if (input.Files.Length > 0)
+                {
+                    path = _webHostEnvironment.WebRootPath + "\\uploads\\books\\";
+
+                    if (!Directory.Exists(path))
+                    {
+                        Directory.CreateDirectory(path);
+                    }
+
+                    using (FileStream fileStream = System.IO.File.Create(path + input.Files.FileName))
+                    {
+
+                        input.Files.CopyTo(fileStream);
+                        fileStream.Flush();
+
+                    }
+                }
                 _context.Books.Add(new Book()
                 {
-                    AuthorId = book.AuthorId,
-                    BookName = book.Name,
-                    CategoryId = book.CategoryId,
-                    Price = book.Price,
+                    AuthorId = input.AuthorId,            
+                    BookName = input.Name,
+                    CategoryId = input.CategoryId,
+                    Price = input.Price,
+                    FileName = path + "\\" + input.Files.FileName
+
                 });
                 _context.SaveChanges();
-                return StatusCode(200, book);
+                return Ok(input);
             }
             catch (Exception ex)
             {

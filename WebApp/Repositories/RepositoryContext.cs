@@ -1,5 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
-using WebApp.Models;
+﻿using Entities.Models;
+using Microsoft.EntityFrameworkCore;
+
 using WebApp.Repositories.Config;
 
 namespace WebApp.Repositories
@@ -18,9 +19,9 @@ namespace WebApp.Repositories
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ApplyConfiguration(new BookConfig());
-            modelBuilder.ApplyConfiguration(new AuthorConfig());
-            modelBuilder.ApplyConfiguration(new CategoryConfig());
+            //modelBuilder.ApplyConfiguration(new BookConfig());
+            //modelBuilder.ApplyConfiguration(new AuthorConfig());
+            //modelBuilder.ApplyConfiguration(new CategoryConfig());
 
 
             modelBuilder.Entity<Book>()
@@ -33,10 +34,6 @@ namespace WebApp.Repositories
                 .WithMany(e => e.Books)
                 .HasForeignKey(e => e.CategoryId);
 
-
-            //modelBuilder.Entity<Category>()
-            //    .HasMany<Author>(e => e.Authors)
-            //    .WithMany(e => e.Categories);
  
         }
 
